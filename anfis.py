@@ -1,4 +1,7 @@
+#exp10 ANFIS
 # ANFIS 5-LAYER IMPLEMENTATION (Rectified & Stable)
+
+!pip install scikit-fuzzy
 
 import numpy as np
 import pandas as pd

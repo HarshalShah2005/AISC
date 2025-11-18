@@ -1,3 +1,4 @@
+#exp8 Fuzzy Sets
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -126,3 +127,81 @@ for i, label in enumerate(labels):
         print("   → Health likely affected, mild to serious symptoms.\n")
     else:
         print("   → High risk of serious health issues.\n")
+
+  
+# Step 10: 3D Heatmap / Surface Plot of Fuzzy Relation R
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+# AQI categories (Good, Moderate, Poor, Severe)
+x = np.arange(4)
+
+# Health effects (Healthy, Mild Symptoms, Serious Symptoms)
+y = np.arange(3)
+
+X, Y = np.meshgrid(x, y)
+
+# Surface values (relation matrix R)
+Z = R.T  # transpose so axis match correctly
+
+ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='k', linewidth=0.5)
+
+ax.set_xticks(x)
+ax.set_yticks(y)
+ax.set_xticklabels(["Good", "Moderate", "Poor", "Severe"])
+ax.set_yticklabels(["Healthy", "Mild", "Serious"])
+ax.set_zlabel("Membership Value")
+
+ax.set_title("3D Heatmap / Surface Plot\nFuzzy Relation: AQI → Health Effects")
+
+plt.show()
+
+# Step 10: Smooth 3D Surface Plot for Fuzzy Relation R
+
+from mpl_toolkits.mplot3d import Axes3D
+from scipy.interpolate import griddata
+
+fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111, projection='3d')
+
+# Original discrete AQI categories and health effects
+x = np.array([0, 1, 2, 3])  # Good, Moderate, Poor, Severe
+y = np.array([0, 1, 2])     # Healthy, Mild, Serious
+
+X, Y = np.meshgrid(x, y)
+Z = R.T  # transpose so matrix aligns correctly
+
+# ------ Interpolate to make smooth surface ------
+x_smooth = np.linspace(0, 3, 100)
+y_smooth = np.linspace(0, 2, 100)
+X_smooth, Y_smooth = np.meshgrid(x_smooth, y_smooth)
+
+Z_smooth = griddata(
+    (X.flatten(), Y.flatten()),
+    Z.flatten(),
+    (X_smooth, Y_smooth),
+    method='cubic'
+)
+
+# ------ Plot Smooth Surface ------
+surf = ax.plot_surface(
+    X_smooth, Y_smooth, Z_smooth,
+    cmap='viridis',
+    edgecolor='none',
+    alpha=0.95
+)
+
+ax.set_xticks(x)
+ax.set_xticklabels(["Good", "Moderate", "Poor", "Severe"])
+
+ax.set_yticks(y)
+ax.set_yticklabels(["Healthy", "Mild", "Serious"])
+
+ax.set_zlabel("Membership Value")
+ax.set_title("Smooth 3D Surface Plot\nFuzzy Relation: AQI → Health Effects")
+
+fig.colorbar(surf, shrink=0.5, aspect=10)
+
+plt.show()
